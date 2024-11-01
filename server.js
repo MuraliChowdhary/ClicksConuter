@@ -10,7 +10,7 @@ mongoose.connect('mongodb://127.0.0.1:27017,127.0.0.1:27018,127.0.0.1:27019/shor
 .then(() => console.log('MongoDB connected'))
 .catch((err) => console.error(err));
 
-app.use('/api/url', urlRoutes);
+app.use('/', urlRoutes);
 
 const PORT = process.env.PORT || 3007;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

@@ -20,7 +20,7 @@ router.post('/shorten', async (req, res) => {
     await url.save();
   }
 
-  res.json({ originalUrl: url.originalUrl, shortUrl: `http://localhost:3007/api/url/`+url.shortUrl });
+  res.json({ originalUrl: url.originalUrl, shortUrl: `https://pickandpartner3.onrender.com`+url.shortUrl });
 });
 
 router.get('/:id', async (req, res) => {
