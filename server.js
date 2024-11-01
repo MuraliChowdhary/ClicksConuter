@@ -1,4 +1,5 @@
 // server.js
+require("dotenv").config();
 const express = require('express');
 const mongoose = require('mongoose');
 const urlRoutes = require('./routes/url');
@@ -6,7 +7,7 @@ const urlRoutes = require('./routes/url');
 const app = express();
 app.use(express.json());
 
-mongoose.connect('mongodb://127.0.0.1:27017,127.0.0.1:27018,127.0.0.1:27019/shorturl?replicaSet=rs0')
+mongoose.connect(process.env.MONGO_URI)
 .then(() => console.log('MongoDB connected'))
 .catch((err) => console.error(err));
 

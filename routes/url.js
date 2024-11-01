@@ -1,4 +1,5 @@
 // routes/url.js
+require("dotenv").config();
 const express = require('express');
 const router = express.Router();
 const Url = require('../model');
