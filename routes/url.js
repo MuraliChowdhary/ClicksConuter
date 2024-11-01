@@ -34,18 +34,36 @@ router.get('/:id', async (req, res) => {
       return res.status(404).json({ message: 'URL not found' });
     }
   
-    // Increment click count
-    url.clicks += 1;
-    console.log(`Incremented click count to: ${url.clicks}`);
+    // Get the current time
+    const currentTime = new Date();
   
-    // Save updated click count
+    // Define a short interval (e.g., 10 seconds) to ignore duplicate clicks
+    const clickInterval = 10 * 1000; // 10 seconds
+  
+    // Filter out clicks within the interval from the same user
+    const recentClick = url.clickData.find((click) => {
+      return currentTime - new Date(click.timestamp) < clickInterval;
+    });
+  
+    // Increment only if there's no recent click from this user
+    if (!recentClick) {
+      url.clicks += 1;
+      console.log(`Incremented click count to: ${url.clicks}`);
+    } else {
+      console.log("Duplicate click detected, not incrementing count.");
+    }
+  
+    // Record click data with timestamp
+    url.clickData.push({
+      timestamp: currentTime
+    });
+    
     await url.save();
   
     // Redirect to the original URL
     res.redirect(url.originalUrl);
   });
   
-  module.exports = router;
   
   
 module.exports = router;
