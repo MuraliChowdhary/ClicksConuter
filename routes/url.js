@@ -34,39 +34,18 @@ router.get('/:id', async (req, res) => {
       return res.status(404).json({ message: 'URL not found' });
     }
   
-    // Retrieve user's IP and lookup geo data
-    const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-    let geo = geoip.lookup(ip);
+    // Increment click count
+    url.clicks += 1;
+    console.log(`Incremented click count to: ${url.clicks}`);
   
-    // If geo data is unavailable, log and use default data
-    if (!geo) {
-      geo = { region: "Local", ll: [0, 0] };
-      console.log("Geo lookup result: null - Using default geo data for local testing:", geo);
-    } else {
-      console.log("Geo lookup successful. Region:", geo.region, "Coordinates:", geo.ll);
-    }
-  
-    const { region, ll: [latitude, longitude] } = geo;
-  
-    // Determine if the click is unique
-    const isUniqueClick = !url.clickData.some(
-      (click) => click.region === region && click.latitude === latitude && click.longitude === longitude
-    );
-  
-    // Increment clicks if unique
-    if (isUniqueClick) {
-      url.clicks += 1;
-      console.log(`Unique click detected. Incremented click count to: ${url.clicks}`);
-    } else {
-      console.log("Repeat click detected for region:", region);
-    }
-  
-    // Log and save click data
-    url.clickData.push({ region, latitude, longitude });
+    // Save updated click count
     await url.save();
   
     // Redirect to the original URL
     res.redirect(url.originalUrl);
   });
+  
+  module.exports = router;
+  
   
 module.exports = router;
